@@ -25,28 +25,37 @@ tags, and body preview. Finding a note is one query returning one exact path.
 
 ## Setup
 
-**1. Point it at your vault.** Edit one file —
-`skills/obsidian-vault/references/vault-config.md`:
+Run it:
 
-```markdown
-<vault_root>
-~/Documents/MyVault
-</vault_root>
+```
+/vault
 ```
 
-**2. Build the index.**
+First run detects your vault, confirms the path with you, writes the config, and
+builds the index. One exchange, no files to open.
+
+```
+Found a vault at ~/Documents/Notes — 84 markdown files. Use it?
+> yes
+vault_index.db — 84 notes total | +84 new | ~0 updated | 0 skipped | -0 removed
+Your folders are Inbox/, Daily/, Projects/ — not the defaults. Remap?
+```
+
+Python 3 only, stdlib only. No pip install, no external deps.
+
+**Prefer to do it by hand?** Edit `<vault_root>` in
+`skills/obsidian-vault/references/vault-config.md` and run:
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/build_vault_index.py" ~/Documents/MyVault
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/build_vault_index.py" ~/Documents/Notes
 ```
 
-Prints `vault_index.db — 84 notes total | +84 new | ~0 updated | 0 skipped | -0 removed`.
-Re-running is incremental: unchanged files are skipped by mtime, deleted files are pruned.
+Every invocation runs a preflight check — unset config, a vault root that moved,
+or a missing index each stop the skill and get resolved before it touches a note.
+A stale path never silently half-executes a workflow.
 
-**3. Done.** Python 3 only, stdlib only. No pip install, no external deps.
-
-Copy the three files in `templates/` into your vault's `90_Templates/` if you want the
-matching note formats.
+Copy the three files in `templates/` into your vault's `90_Templates/` if you want
+the matching note formats.
 
 ---
 

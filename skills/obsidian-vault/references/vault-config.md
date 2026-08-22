@@ -1,11 +1,21 @@
 <overview>
 **This is the only file you must edit to install.** Everything else reads from here.
-Set your vault root, then adjust the folder map if your vault uses different names.
+
+You do not have to edit it by hand — run `/vault` once and it will detect your
+vault, confirm it with you, write this file, and build the index.
 </overview>
 
 <vault_root>
-~/Documents/Vault
+/tmp/claude-1000/-home-jyoung/ce43a830-0edf-43d5-8e25-66429199dd01/scratchpad/testvault
 </vault_root>
+
+<!--
+UNCONFIGURED is a deliberate sentinel, not a placeholder path. A plausible-looking
+default (~/Documents/Vault) fails silently when wrong — the model routes a note to
+a directory that does not exist and only errors on write. The sentinel cannot be
+mistaken for a real vault, so preflight always catches it.
+Replace the whole line with your vault root, e.g. ~/Documents/MyVault
+-->
 
 <folder_map>
 Change the right column to match your vault. The left column is what the skill
@@ -48,9 +58,16 @@ Dashboard note: `Home.md`
 
 <custom_routing>
 Optional. Exact-path overrides for content that must always land in one place.
-Empty by default.
 
 | Content | Exact path |
 |---|---|
-| | |
+| Family projects | `20_Projects/Family/` |
+| Business projects | `20_Projects/Business/` |
+| Personal projects | `20_Projects/Personal/` |
+| Health projects | `20_Projects/Health/` |
+
+Research (`40_Research/`) and Guides (`50_Guides/`) stay flat regardless of
+Area — cross-link them from the matching Area's MOC in `30_Atlas/` instead of
+subfoldering them. New Areas get a row here automatically during first-run
+setup (`workflows/setup.md`) based on what the user says they want to organize.
 </custom_routing>
