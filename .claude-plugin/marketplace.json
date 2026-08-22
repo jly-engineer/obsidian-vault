@@ -1,0 +1,14 @@
+{
+  "name": "jly-engineer",
+  "owner": {
+    "name": "Joe Young",
+    "email": "j.young.engineer@outlook.com"
+  },
+  "plugins": [
+    {
+      "name": "obsidian-vault",
+      "source": "./",
+      "description": "Obsidian vault operations backed by a SQLite FTS index — session logs, capture, project stubs, research notes, guides, MOCs."
+    }
+  ]
+}

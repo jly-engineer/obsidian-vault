@@ -1,0 +1,14 @@
+{
+  "name": "obsidian-vault",
+  "version": "1.0.0",
+  "description": "Obsidian vault operations for Claude Code, backed by a SQLite FTS index instead of filesystem search. Session logging, capture, project stubs, research notes, guides, and MOCs.",
+  "author": {
+    "name": "Joe Young",
+    "email": "j.young.engineer@outlook.com",
+    "url": "https://github.com/jly-engineer"
+  },
+  "homepage": "https://github.com/jly-engineer/obsidian-vault",
+  "repository": "https://github.com/jly-engineer/obsidian-vault",
+  "license": "MIT",
+  "keywords": ["obsidian", "pkm", "notes", "zettelkasten", "para", "sqlite", "skill"]
+}
