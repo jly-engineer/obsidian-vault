@@ -1,5 +1,6 @@
 {
   "name": "jly-engineer",
+  "description": "Claude Code plugins by jly-engineer \u2014 knowledge-management and vault tooling.",
   "owner": {
     "name": "Joe Young",
     "email": "j.young.engineer@outlook.com"
@@ -8,7 +9,7 @@
     {
       "name": "obsidian-vault",
       "source": "./",
-      "description": "Obsidian vault operations backed by a SQLite FTS index — session logs, capture, project stubs, research notes, guides, MOCs."
+      "description": "Obsidian vault operations backed by a SQLite FTS index \u2014 session logs, capture, project stubs, research notes, guides, MOCs."
     }
   ]
 }
