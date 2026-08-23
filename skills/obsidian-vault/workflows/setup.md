@@ -7,6 +7,26 @@ and do not start the user's actual task until this completes.
 <process>
 
 <step_1>
+Check whether the Obsidian app itself is installed — the plugin only manages
+files, it doesn't need Obsidian running, but a user with no Obsidian install
+has nothing to open their vault with once this finishes:
+
+```bash
+command -v obsidian 2>/dev/null; command -v flatpak >/dev/null 2>&1 && flatpak list 2>/dev/null | grep -i obsidian; ls /Applications/Obsidian.app 2>/dev/null; find ~ -maxdepth 2 -iname 'Obsidian*.AppImage' 2>/dev/null
+```
+
+If nothing is found, tell the user once, then continue with vault detection —
+don't block on it, and don't attempt to download or install anything
+yourself (fetching and running an installer is a bigger ask than this skill's
+job of managing notes). Offer the right platform instructions:
+
+- **Linux:** download the AppImage from [obsidian.md](https://obsidian.md),
+  then `chmod +x Obsidian-*.AppImage && ./Obsidian-*.AppImage`
+  (or `flatpak install flathub md.obsidian.Obsidian`)
+- **macOS:** download the `.dmg` from [obsidian.md](https://obsidian.md), drag
+  to Applications
+- **Windows:** download and run the installer from [obsidian.md](https://obsidian.md)
+
 Detect candidate vaults — an Obsidian vault is any directory containing `.obsidian/`:
 
 ```bash
@@ -26,7 +46,15 @@ Confirm with the user — never auto-write a detected path.
 
 - **One candidate:** "Found a vault at `<path>` — 84 markdown files. Use it?"
 - **Several:** list them numbered with each one's markdown file count, ask which.
-- **None:** ask directly — "Where is your vault? Give me the folder path."
+- **None:** don't ask where to put it — create it at a fixed, predictable
+  default so there's no naming round-trip for the common "brand-new user"
+  case: `~/Downloads/vault` (POSIX), `%USERPROFILE%\Downloads\vault`
+  (Windows). Tell the user where it's going as you do it — "No existing
+  vault found. Creating one at `~/Downloads/vault`." — this is a notice, not
+  a question; don't wait for a reply before proceeding to step_3.
+  (This is the one deliberate exception to "never auto-write a path": it
+  only fires when detection found *nothing at all* to be wrong about — there
+  is no existing vault this could clobber or misidentify.)
 
 Report the file count so a wrong-but-existing directory is obvious:
 ```bash
@@ -34,8 +62,10 @@ find "<candidate>" -name '*.md' -not -path '*/.obsidian/*' | wc -l
 ```
 A count of 0 almost always means the wrong directory. Say so and re-ask.
 
-**Stop here and wait for the user's answer.** Detection produces a suggestion,
-never a decision. The failure this guards against is quiet and expensive: pick
+**Stop here and wait for the user's answer — except the None branch above,**
+which proceeds on its own by design (nothing existing to misidentify). For
+One and Several: detection produces a suggestion, never a decision. The
+failure this guards against is quiet and expensive: pick
 the wrong directory and the first note lands in a scratch folder or an abandoned
 copy of the vault, and nothing about the run looks wrong until the user goes
 hunting for that note weeks later. A real vault and a stale duplicate are
@@ -43,7 +73,8 @@ indistinguishable from the filesystem, so don't try to tell them apart — that
 judgement is exactly what the user is here to supply.
 
 Concretely: do not run step_3, do not write the config, and do not create, edit,
-or append to any file anywhere until the user has named or confirmed a root.
+or append to any file anywhere until the user has named or confirmed a root —
+or, for the None branch, until you've stated the fixed default path per above.
 Working directory is a hint about what they're looking at, not consent.
 
 If they don't answer, leaving the config `UNCONFIGURED` is the correct outcome.
@@ -55,6 +86,10 @@ somewhere plausible is a bug the user has to discover.
 Write the config — replace the `<vault_root>` line in
 `references/vault-config.md`. Use Edit, replacing `UNCONFIGURED` with the
 confirmed absolute path. Leave every other section alone.
+
+If this is the None-branch fixed default and the directory doesn't exist yet,
+create it first: `mkdir -p ~/Downloads/vault`. The index build in step_4 needs
+somewhere to point at.
 </step_3>
 
 <step_4>
@@ -127,6 +162,13 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/build_vault_index.py" "<vault_root>"
 </step_6>
 
 <step_7>
+Write a short getting-started note to `50_Guides/Vault Plugin - Getting Started.md`
+(frontmatter `type: guide`) — this session's setup summary as something the user
+can find again later instead of only living in scrollback: vault root, folder
+map (as configured), Area(s) created, whether Obsidian itself was detected
+(and the install link if not), and the command list from this plugin's README.
+Skip it if that file already exists — first run only, don't overwrite.
+
 Confirm and hand off — state the vault root, the indexed note count, any folder
 map changes, and which Area(s) were established. Then continue to the user's
 original request, or show the intake menu if they had not asked for anything yet.
@@ -135,8 +177,11 @@ original request, or show the intake menu if they had not asked for anything yet
 </process>
 
 <success_criteria>
-- [ ] No file was created or edited before the user confirmed a root
-- [ ] Vault root confirmed by the user, never auto-written
+- [ ] Obsidian app presence checked; install instructions offered if absent
+- [ ] No file was created or edited before the user confirmed a root (or, for
+      a fresh no-vault-found case, before the fixed default path was stated)
+- [ ] Vault root confirmed by the user, never auto-written — except the
+      documented None-branch default
 - [ ] `vault-config.md` no longer contains UNCONFIGURED
 - [ ] Index built, note count reported and non-zero
 - [ ] Folder map verified against real directories
