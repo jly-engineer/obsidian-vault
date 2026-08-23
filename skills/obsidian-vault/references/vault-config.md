@@ -6,7 +6,7 @@ vault, confirm it with you, write this file, and build the index.
 </overview>
 
 <vault_root>
-/tmp/claude-1000/-home-jyoung/ce43a830-0edf-43d5-8e25-66429199dd01/scratchpad/testvault
+UNCONFIGURED
 </vault_root>
 
 <!--
@@ -15,6 +15,11 @@ default (~/Documents/Vault) fails silently when wrong — the model routes a not
 a directory that does not exist and only errors on write. The sentinel cannot be
 mistaken for a real vault, so preflight always catches it.
 Replace the whole line with your vault root, e.g. ~/Documents/MyVault
+
+Prefer a `~/`-relative path over an absolute one — preflight resolves `~` per
+environment, so a config written on one machine still works after a repo move,
+a new container, or a fresh account. An absolute path baked in from a different
+environment is exactly what produces BAD_ROOT after a move.
 -->
 
 <folder_map>

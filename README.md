@@ -16,12 +16,46 @@ tags, and body preview. Finding a note is one query returning one exact path.
 
 ---
 
+## What this is (and isn't)
+
+This plugin manages notes inside an **existing Obsidian vault** — it does not
+install or replace Obsidian, and it doesn't require Obsidian to be running.
+Obsidian is just a markdown-file viewer/editor here; the plugin reads and
+writes the same `.md` files your Obsidian app shows you. Safe to run while
+Obsidian is open — both just read/write plain files, and Obsidian will pick
+up the changes on its own.
+
+**End to end:** install plugin → run `/vault` once (detects your vault,
+confirms it, builds the index) → use it. About two minutes to first note.
+
+**Don't have a vault yet?** Grab Obsidian free at
+[obsidian.md](https://obsidian.md), open it, and choose
+*Create new vault* — pick any folder, that's it. Come back here once you
+have at least one note in it.
+
 ## Install
 
 ```
 /plugin marketplace add jly-engineer/obsidian-vault
 /plugin install obsidian-vault@jly-engineer
 ```
+
+## Permissions
+
+The skill uses `Bash` (build/query the SQLite index), `Read`, `Write` (new
+notes only), and `Edit` (surgical updates to existing notes) — no network
+access, nothing outside the vault root (see **Notes** below).
+
+For first-run setup, auto-approving these four for this session is the
+smoothest path — setup does several in a row (detect, confirm, write config,
+build index) and pausing on each one interrupts the one-exchange flow the
+setup workflow is designed around. Day-to-day, "ask each time" is fine; a
+single vault operation is usually one Bash call and one Write or Edit.
+
+If a tool call gets denied mid-workflow, the skill stops where it is — it
+does not retry or route around a denial. Nothing is left half-written: reads
+happen before writes, and edits are surgical (read-then-edit), never
+overwrite-in-place. Just re-run `/vault` to pick back up.
 
 ## Setup
 

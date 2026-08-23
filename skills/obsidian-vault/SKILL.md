@@ -232,6 +232,12 @@ What would you like to do?
 | 8, "read", "find", "search", "what's in" | `workflows/read-vault.md` |
 
 After reading the workflow, follow it exactly.
+
+A keyword match routes to a workflow even when the rest of the argument isn't
+a valid topic/name for it — e.g. `guide start` matches on "guide" but "start"
+is not a topic. Don't silently drop the leftover text and guess. If the
+workflow needs a topic, title, or name and what's left after the keyword
+doesn't look like one, ask for it directly before proceeding.
 </routing>
 
 <reference_index>

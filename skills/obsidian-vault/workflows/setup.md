@@ -88,6 +88,14 @@ class as a stale vault root.
 
 If the vault has no matching folders at all, ask whether to create the default set
 or map to what is already there. Never create folders unprompted.
+
+Offer the note templates: "Want the matching note templates (Standard / Daily /
+Project) copied into `90_Templates/`?" If yes:
+```bash
+cp "${CLAUDE_PLUGIN_ROOT}"/templates/*.md "<vault_root>/90_Templates/"
+```
+Skip silently if the user says no — templates are optional, not required for
+any workflow to function.
 </step_5>
 
 <step_6>
