@@ -30,7 +30,7 @@ Act on `STATUS`:
 | STATUS | Action |
 |---|---|
 | `READY` | Proceed normally. Do not mention preflight to the user. |
-| `UNCONFIGURED` | First run. Read `workflows/setup.md` and follow it. **Do not show the intake menu first.** |
+| `UNCONFIGURED` | First run. Read `workflows/setup.md` and follow it. **Do not show the intake menu first.** A `GUIDE=<path>` line accompanies this status the first time — mention it once ("I opened a getting-started guide covering Obsidian install and the available commands at `<path>`"), don't re-mention it on later runs. |
 | `BAD_ROOT` | Configured root does not exist — moved or mistyped. Tell the user the path that failed, then read `workflows/setup.md` to re-detect. |
 | `NO_INDEX` | Root is valid, index missing. Say so, build it, then continue: `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/build_vault_index.py" "<root>"` |
 | `NO_CONFIG` | Install is broken — `vault-config.md` is missing. Report it; do not guess a path. |
